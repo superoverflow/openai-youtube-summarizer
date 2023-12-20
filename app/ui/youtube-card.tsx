@@ -9,7 +9,7 @@ import {
 
 export async function YoutubeCard({ videoId }: { videoId: string }) {
   const video = await fetchYoutubeVideo(videoId);
-  // const sentiment = await fetchSentiment(videoId);
+  const sentiment = await fetchSentiment(videoId);
   const thumbnails = video.thumbnails.default;
 
   return (
@@ -24,7 +24,7 @@ export async function YoutubeCard({ videoId }: { videoId: string }) {
           height={thumbnails.height}
           width={thumbnails.width}
         />
-        {/* <code>{JSON.stringify(sentiment)}</code> */}
+        <code>{JSON.stringify(sentiment)}</code>
       </CardContent>
     </Card>
   );
