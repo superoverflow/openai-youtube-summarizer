@@ -11,7 +11,6 @@ export default function Home({
   };
 }) {
   const videoId = searchParams?.videoId;
-  
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="flex w-full flex-row items-center space-between font-mono">
