@@ -1,4 +1,4 @@
-import { fetchSentiment, fetchYoutubeVideo } from "@/app/lib/data";
+import { fetchAndCacheYoutubeVideo } from "@/app/lib/data";
 import {
   Card,
   CardContent,
@@ -6,25 +6,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { format } from 'date-fns';
+
 
 export async function YoutubeCard({ videoId }: { videoId: string }) {
-  const video = await fetchYoutubeVideo(videoId);
-  // const sentiment = await fetchSentiment(videoId);
-  const thumbnails = video.thumbnails.default;
+  const video = await fetchAndCacheYoutubeVideo(videoId);
+  const thumbnails = video.thumbnail_url;
+  const publishedAt = format(video.published_at, 'yyyy-MM-dd');
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>{video.title}</CardTitle>
-        <CardDescription>{video.publishedAt}</CardDescription>
+        <CardDescription>{publishedAt}</CardDescription>
       </CardHeader>
       <CardContent>
         <img
-          src={thumbnails.url}
-          height={thumbnails.height}
-          width={thumbnails.width}
+          src={thumbnails}
+          height={120}
+          width={90}
         />
-        {/* <code>{JSON.stringify(sentiment)}</code> */}
       </CardContent>
     </Card>
   );

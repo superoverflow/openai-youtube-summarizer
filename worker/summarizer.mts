@@ -53,7 +53,8 @@ async function fetchTranscript(videoId: string) {
 async function getSentiment(
   transcript: string,
   prompt: string,
-  openai: OpenAI
+  openai: OpenAI,
+  model: string = "gpt-3.5-turbo-16k"
 ) {
   const chatCompletion = await openai.chat.completions.create({
     messages: [
@@ -66,7 +67,7 @@ async function getSentiment(
         content: transcript,
       },
     ],
-    model: "gpt-3.5-turbo-16k",
+    model
   });
 
   const sentiment: Sentiment = JSON.parse(
@@ -75,10 +76,19 @@ async function getSentiment(
   return sentiment;
 }
 
+async function saveSentiment(videoId: string, pgPool: pg.Pool ,sentiment: Sentiment) {
+  const result = await pgPool.query(
+    "INSERT INTO sentiments (video_id, sentiment) VALUES ($1, $2)",
+    [videoId, sentiment]
+  );
+  console.log(result.rows[0]);
+}
+
 const pusher = new Pusher(PUSHER_KEY, {
   cluster: PUSHER_CLUSTER,
 });
 const channel = pusher.subscribe(PUSHER_CHANNEL);
+console.log(`==== subscribed to ${PUSHER_CHANNEL}`);
 channel.bind(PUSHER_EVENT, messageHandler);
 
 async function main() {
@@ -106,6 +116,7 @@ async function main() {
   const transcript = await fetchTranscript("zLa6qdMAP6A");
   const sentiment = await getSentiment(transcript, PROMPT, openai);
   console.log(sentiment);
+  pgPool.end();
 }
 
 //main();
