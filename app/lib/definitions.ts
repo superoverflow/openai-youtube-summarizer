@@ -37,3 +37,7 @@ export type Sentiment = {
         sentiment: string;
     }[];
 }
+
+export type Message = {
+    videoId: string;
+}
