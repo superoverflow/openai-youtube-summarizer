@@ -10,13 +10,14 @@ import { format } from 'date-fns';
 import { CiCalendar } from "react-icons/ci";
 import { IoPartlySunnySharp } from "react-icons/io5";
 import { PiCheckFatFill } from "react-icons/pi";
+import { processVideo } from "@/app/lib/actions";
 
 
 export async function YoutubeCard({ videoId }: { videoId: string }) {
   const video = await fetchAndCacheYoutubeVideo(videoId);
   const thumbnails = video.thumbnail_url;
   const publishedAt = format(video.published_at, 'yyyy-MM-dd');
-
+  const processVideoId = processVideo.bind(null, videoId)
   return (
     <Card className="w-[320px] h-[180px] m-1">
       <CardHeader>
@@ -41,9 +42,11 @@ export async function YoutubeCard({ videoId }: { videoId: string }) {
               <IoPartlySunnySharp />
             </div>
             <div className="mt-2 text-sm text-gray-500 flex flex-row-reverse justify-between">
-              <Button variant="outline">
-                <PiCheckFatFill className="mr-2 h-4 w-4" />Download
-              </Button>
+              <form action={processVideoId}>
+                <Button variant="outline" type="submit">
+                  <PiCheckFatFill className="mr-2 h-4 w-4" />Download
+                </Button>
+              </form>
             </div>
           </div>
         </div>

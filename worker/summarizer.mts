@@ -33,15 +33,21 @@ const PUSHER_KEY = envVar("PUSHER_KEY");
 const PUSHER_CLUSTER = envVar("PUSHER_CLUSTER");
 const PUSHER_CHANNEL = envVar("PUSHER_CHANNEL");
 const PUSHER_EVENT = envVar("PUSHER_EVENT");
+const POSTGRES_URL = envVar("POSTGRES_URL");
 
 const openAiClient = new OpenAI({ apiKey: OPENAI_API_KEY });
+const pgPool = new PgPool({
+  connectionString: POSTGRES_URL + "?sslmode=require",
+});
 
 const messageHandler = async (message: Message) => {
   const { videoId } = message;
   console.log(`==== received videoId ${videoId}`);
   const transcript = await fetchTranscript(videoId);
+  console.log(`==== received videoId ${videoId}`);
   const sentiment = await getSentiment(transcript, PROMPT, openAiClient);
   console.log(sentiment);
+  saveSentiment(videoId, pgPool, sentiment);
 };
 
 async function fetchTranscript(videoId: string) {
@@ -76,12 +82,13 @@ async function getSentiment(
   return sentiment;
 }
 
-async function saveSentiment(videoId: string, pgPool: pg.Pool ,sentiment: Sentiment) {
+async function saveSentiment(videoId: string, pgPool: pg.Pool, sentiment: Sentiment) {
   const result = await pgPool.query(
-    "INSERT INTO sentiments (video_id, sentiment) VALUES ($1, $2)",
-    [videoId, sentiment]
+    "UPDATE youtube_videos set market_sentiment = $2 where video_id = $1",
+    [videoId, sentiment.market_sentiment]
   );
-  console.log(result.rows[0]);
+  console.log({ result });
+  pgPool.end();
 }
 
 const pusher = new Pusher(PUSHER_KEY, {
