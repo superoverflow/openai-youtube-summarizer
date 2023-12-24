@@ -48,3 +48,10 @@ export async function fetchAndCacheYoutubeVideo(videoId: string) {
   saveYoutubeVideo(video);
   return video;
 }
+
+
+export async function fetchAllVideos(offset: number = 0, limit: number = 10) {
+  const { rows } =
+    await sql<{ video_id: string }>`select video_id from youtube_videos limit ${limit} offset ${offset}`
+  return rows
+}
