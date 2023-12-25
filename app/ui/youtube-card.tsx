@@ -5,30 +5,15 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { RunAnalysisButton } from "@/app/ui/run-analysis-button";
+import { WeatherIcon } from "@/app/ui/weather-icon";
 import { format } from 'date-fns';
 import { CiCalendar } from "react-icons/ci";
-import { TiWeatherSunny, TiWeatherDownpour, TiWeatherPartlySunny } from "react-icons/ti";
-import { PiCheckFatFill } from "react-icons/pi";
-import { processVideo } from "@/app/lib/actions";
-
-const WeatherIcon = ({ sentiment }: { sentiment: "bullish" | "neutral" | "bearish" }) => {
-  switch (sentiment) {
-    case "bullish":
-      return <TiWeatherSunny className="mr-1" />
-    case "neutral":
-      return <TiWeatherPartlySunny className="mr-1" />
-    case "bearish":
-      return <TiWeatherDownpour className="mr-1" />
-  }
-}
-
 
 export async function YoutubeCard({ videoId }: { videoId: string }) {
   const video = await fetchAndCacheYoutubeVideo(videoId);
   const thumbnails = video.thumbnail_url;
   const publishedAt = format(video.published_at, 'yyyy-MM-dd');
-  const processVideoId = processVideo.bind(null, videoId)
   return (
     <Card className="w-[320px] h-[180px] m-1">
       <CardHeader>
@@ -53,10 +38,7 @@ export async function YoutubeCard({ videoId }: { videoId: string }) {
               <WeatherIcon sentiment={"bearish"} />
             </div>
             <div className="mt-2 text-sm text-gray-500">
-              <form action={processVideoId}>
-                <Button className="w-full" variant="outline">
-                  <PiCheckFatFill className="mr-2 h-4 w-4" />Run Analysis
-                </Button></form>
+              <RunAnalysisButton videoId={videoId} />
             </div>
           </div>
         </div>
