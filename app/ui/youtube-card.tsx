@@ -38,7 +38,7 @@ export async function YoutubeCard({ videoId }: { videoId: string }) {
               <WeatherIcon sentiment={video.market_sentiment} />
             </div>
             <div className="mt-2 text-sm text-gray-500">
-              <RunAnalysisButton videoId={videoId} />
+              <RunAnalysisButton videoId={videoId} processed={!!video.market_sentiment} />
             </div>
           </div>
         </div>

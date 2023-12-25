@@ -1,3 +1,4 @@
+import { unstable_noStore } from "next/cache";
 import { YoutubeVideoAPIResponse, YoutubeVideo } from "./definitions";
 import { sql } from "@vercel/postgres";
 
@@ -22,6 +23,7 @@ async function fetchYoutubeVideoFromAPI(videoId: string) {
 }
 
 async function fetchYoutubeVideosFromDB(videoId: string) {
+  unstable_noStore();
   const { rows } = await sql<YoutubeVideo>`
     SELECT 
       video_id,
@@ -58,7 +60,11 @@ export async function fetchAndCacheYoutubeVideo(videoId: string) {
 
 
 export async function fetchAllVideos(offset: number = 0, limit: number = 10) {
-  const { rows } =
-    await sql<{ video_id: string }>`select video_id from youtube_videos limit ${limit} offset ${offset}`
+  const { rows } = await sql<{ video_id: string }>`
+    SELECT 
+      video_id 
+    FROM youtube_videos 
+    LIMIT ${limit}
+    OFFSET ${offset}`
   return rows
 }
