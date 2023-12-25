@@ -1,3 +1,5 @@
+type Sentiment = "Bullish" | "Neutral" | "Bearish" | null;
+
 export type YoutubeVideoAPIResponse = {
     publishedAt: string;
     channelId: string;
@@ -37,14 +39,14 @@ export type YoutubeVideo = {
     thumbnail_url: string;
     channel_id: string;
     transcript?: string;
-    market_sentiment?: string;
+    market_sentiment?: Sentiment;
 }
 
-export type Sentiment = {
-    market_sentiment: string;
+export type SentimentResponse = {
+    market_sentiment: Sentiment;
     single_names: {
         name: string;
-        sentiment: string;
+        sentiment: Sentiment;
     }[];
 }
 

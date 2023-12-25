@@ -2,7 +2,7 @@ import Pusher from "pusher-js";
 import pg from "pg";
 import { YoutubeTranscript } from "youtube-transcript";
 import { config } from "dotenv";
-import type { Sentiment, Message } from "@/app/lib/definitions";
+import type { SentimentResponse, Message } from "@/app/lib/definitions";
 import OpenAI from "openai";
 
 const PROMPT = `You analyze speech and summarize in json format:
@@ -44,7 +44,10 @@ const messageHandler = async (message: Message) => {
   const { videoId } = message;
   console.log(`==== received videoId ${videoId}`);
   const transcript = await fetchTranscript(videoId);
+  saveTranscript(videoId, pgPool, transcript);
+  console.log(`==== saved transcript for videoId ${videoId}`);
   const sentiment = await getSentiment(transcript, PROMPT, openAiClient);
+  console.log({ sentiment })
   saveSentiment(videoId, pgPool, sentiment);
   console.log(`==== saved sentiment for videoId ${videoId}`);
 };
@@ -75,19 +78,24 @@ async function getSentiment(
     model
   });
 
-  const sentiment: Sentiment = JSON.parse(
+  const sentiment: SentimentResponse = JSON.parse(
     chatCompletion.choices[0].message.content || "{}"
   );
   return sentiment;
 }
 
-async function saveSentiment(videoId: string, pgPool: pg.Pool, sentiment: Sentiment) {
-  const result = await pgPool.query(
+async function saveSentiment(videoId: string, pgPool: pg.Pool, sentiment: SentimentResponse) {
+  await pgPool.query(
     "UPDATE youtube_videos set market_sentiment = $2 where video_id = $1",
     [videoId, sentiment.market_sentiment]
   );
-  console.log({ result });
-  pgPool.end();
+}
+
+async function saveTranscript(videoId: string, pgPool: pg.Pool, transcript: string) {
+  await pgPool.query(
+    "UPDATE youtube_videos set transcript = $2 where video_id = $1",
+    [videoId, transcript]
+  );
 }
 
 const pusher = new Pusher(PUSHER_KEY, {

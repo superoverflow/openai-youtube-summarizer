@@ -22,11 +22,18 @@ async function fetchYoutubeVideoFromAPI(videoId: string) {
 }
 
 async function fetchYoutubeVideosFromDB(videoId: string) {
-  const dbRecords = await sql<YoutubeVideo>`SELECT
-    title, published_at, thumbnail_url, channel_id, transcript, market_sentiment
+  const { rows } = await sql<YoutubeVideo>`
+    SELECT 
+      video_id,
+      title, 
+      published_at, 
+      thumbnail_url, 
+      channel_id, 
+      transcript, 
+      market_sentiment
     FROM youtube_videos
-    WHERE video_id = ${videoId}`;
-  if (dbRecords.rows.length > 0) return dbRecords.rows[0];
+    WHERE video_id = ${videoId};`;
+  if (rows.length > 0) return rows[0];
   return null;
 }
 
