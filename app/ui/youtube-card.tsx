@@ -6,7 +6,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { RunAnalysisButton } from "@/app/ui/run-analysis-button";
-import { WeatherIcon } from "@/app/ui/weather-icon";
+import { SentimentIcon } from "@/app/ui/weather-icon";
 import { format } from 'date-fns';
 import { CiCalendar } from "react-icons/ci";
 
@@ -35,7 +35,7 @@ export async function YoutubeCard({ videoId }: { videoId: string }) {
               <span className="grow">
                 {publishedAt}
               </span>
-              <WeatherIcon sentiment={video.market_sentiment} />
+              <SentimentIcon sentiment={video.market_sentiment} />
             </div>
             <div className="mt-2 text-sm text-gray-500">
               <RunAnalysisButton videoId={videoId} processed={!!video.market_sentiment} />
