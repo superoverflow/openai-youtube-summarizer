@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Suspense } from "react";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -26,8 +28,10 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        {children}
+        <Suspense fallback={<AiOutlineLoading className="spin mx-auto mt-12" />}>
+          {children}
+        </Suspense>
       </body>
-    </html>
+    </html >
   );
 }
