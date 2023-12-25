@@ -35,18 +35,17 @@ export async function YoutubeCard({ videoId }: { videoId: string }) {
           />
           <div className="flex flex-col w-full">
             <div className="mt-1 text-sm text-gray-500 flex items-center">
-              <CiCalendar />
+              <CiCalendar className="mr-2" />
               <span className="grow">
                 {publishedAt}
               </span>
-              <IoPartlySunnySharp />
+              <IoPartlySunnySharp className="mr-1" />
             </div>
-            <div className="mt-2 text-sm text-gray-500 flex flex-row-reverse justify-between">
+            <div className="mt-2 text-sm text-gray-500">
               <form action={processVideoId}>
-                <Button variant="outline" type="submit">
-                  <PiCheckFatFill className="mr-2 h-4 w-4" />Download
-                </Button>
-              </form>
+                <Button className="w-full" variant="outline">
+                  <PiCheckFatFill className="mr-2 h-4 w-4" />Run Analysis
+                </Button></form>
             </div>
           </div>
         </div>
