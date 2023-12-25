@@ -44,10 +44,9 @@ const messageHandler = async (message: Message) => {
   const { videoId } = message;
   console.log(`==== received videoId ${videoId}`);
   const transcript = await fetchTranscript(videoId);
-  console.log(`==== received videoId ${videoId}`);
   const sentiment = await getSentiment(transcript, PROMPT, openAiClient);
-  console.log(sentiment);
   saveSentiment(videoId, pgPool, sentiment);
+  console.log(`==== saved sentiment for videoId ${videoId}`);
 };
 
 async function fetchTranscript(videoId: string) {
@@ -97,33 +96,3 @@ const pusher = new Pusher(PUSHER_KEY, {
 const channel = pusher.subscribe(PUSHER_CHANNEL);
 console.log(`==== subscribed to ${PUSHER_CHANNEL}`);
 channel.bind(PUSHER_EVENT, messageHandler);
-
-async function main() {
-  const POSTGRES_URL = envVar("POSTGRES_URL");
-  const PUSHER_KEY = envVar("PUSHER_KEY");
-  const PUSHER_CLUSTER = envVar("PUSHER_CLUSTER");
-  const PUSHER_CHANNEL = envVar("PUSHER_CHANNEL");
-  const PUSHER_EVENT = envVar("PUSHER_EVENT");
-  const OPENAI_API_KEY = envVar("OPENAI_API_KEY");
-
-  const pgPool = new PgPool({
-    connectionString: POSTGRES_URL + "?sslmode=require",
-  });
-
-  const pusher = new Pusher(PUSHER_KEY, {
-    cluster: PUSHER_CLUSTER,
-  });
-  const channel = pusher.subscribe(PUSHER_CHANNEL);
-  channel.bind(PUSHER_EVENT, messageHandler);
-  const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
-
-  const result = await pgPool.query("select NOW()");
-  console.log(result.rows[0]);
-
-  const transcript = await fetchTranscript("zLa6qdMAP6A");
-  const sentiment = await getSentiment(transcript, PROMPT, openai);
-  console.log(sentiment);
-  pgPool.end();
-}
-
-//main();
