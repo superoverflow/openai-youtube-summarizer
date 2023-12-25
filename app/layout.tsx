@@ -31,11 +31,9 @@ export default function RootLayout({
         )}
       >
         <Navbar />
-        <div className="mt-16">
-          <Suspense fallback={<AiOutlineLoading className="spin mx-auto mt-12" />}>
-            {children}
-          </Suspense>
-        </div>
+        <Suspense fallback={<AiOutlineLoading className="spin mx-auto mt-12" />}>
+          {children}
+        </Suspense>
       </body>
     </html >
   );
