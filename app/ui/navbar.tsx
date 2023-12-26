@@ -12,7 +12,7 @@ type MenuLink = {
 
 const menuItems: MenuLink[] = [
   { name: 'Dashboard', href: "/" },
-  { name: 'Channel', href: "/channels" },
+  { name: 'Playlist', href: "/playlists" },
   { name: 'Video', href: "/videos" }
 ]
 
