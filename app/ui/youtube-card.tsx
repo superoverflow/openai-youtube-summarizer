@@ -6,7 +6,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { RunAnalysisButton } from "@/app/ui/run-analysis-button";
-import { SentimentIcon } from "@/app/ui/weather-icon";
+import { SentimentIcon } from "@/app/ui/sentiment-icon";
 import { format } from 'date-fns';
 import { CiCalendar } from "react-icons/ci";
 
