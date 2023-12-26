@@ -17,8 +17,8 @@ export default function Home({
 }) {
   const q = searchParams?.q;
   return (
-    <main className="flex flex-col items-center justify-between mx-auto p-4">
-      <div className="flex w-full flex-row items-center font-mono">
+    <main className="flex flex-col items-center justify-between container mx-auto p-4">
+      <div className="mt-2 flex w-full flex-row items-center font-mono">
         <form action={searchVideos} className="w-full flex items-center">
           <Input
             placeholder="Search for youtube videos"
