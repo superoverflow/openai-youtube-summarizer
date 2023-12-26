@@ -29,7 +29,7 @@ export default function Home({
           </Button>
         </form>
       </div>
-      <div className="mt-2">
+      <div className="mt-2 flex flex-row flex-wrap">
       <Suspense fallback={<AiOutlineLoading className="mx-auto mt-2 animate-spin" />}>
         <SearchResult query={q}/>
       </Suspense>

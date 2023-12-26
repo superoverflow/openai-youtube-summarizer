@@ -9,8 +9,9 @@ import { processVideo } from "@/app/lib/actions";
 
 
 import { useTransition, useState } from 'react';
+import { YoutubeVideo } from "../lib/definitions";
 
-export const RunAnalysisButton = ({ videoId, processed }: { videoId: string, processed: boolean }) => {
+export const RunAnalysisButton = ({ video, processed }: { video: YoutubeVideo, processed: boolean }) => {
   const [_, startTransition] = useTransition();
   const [sent, setSent] = useState(false);
   const disabled = sent || processed;
@@ -18,7 +19,7 @@ export const RunAnalysisButton = ({ videoId, processed }: { videoId: string, pro
     <Button className="w-full" variant="outline"
       onClick={() => startTransition(() => {
         setSent(true)
-        processVideo(videoId)
+        processVideo(video)
       }
       )}
       disabled={disabled}

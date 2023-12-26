@@ -39,7 +39,7 @@ async function fetchYoutubeVideosFromDB(videoId: string) {
   return null;
 }
 
-async function saveYoutubeVideo(video: YoutubeVideo) {
+export async function saveYoutubeVideo(video: YoutubeVideo) {
   sql`
   INSERT INTO youtube_videos (video_id, title, published_at, thumbnail_url)
   VALUES (${video.video_id}, ${video.title}, ${video.published_at}, ${video.thumbnail_url})
@@ -60,6 +60,7 @@ export async function fetchAndCacheYoutubeVideo(videoId: string) {
 
 
 export async function fetchAllVideos(offset: number = 0, limit: number = 10) {
+  noStore();
   const { rows } = await sql<{ video_id: string }>`
     SELECT 
       video_id 
