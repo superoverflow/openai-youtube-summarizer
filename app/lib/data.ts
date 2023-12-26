@@ -1,4 +1,4 @@
-import { unstable_noStore } from "next/cache";
+import { unstable_noStore as noStore } from "next/cache";
 import { YoutubeVideoAPIResponse, YoutubeVideo } from "./definitions";
 import { sql } from "@vercel/postgres";
 
@@ -23,7 +23,7 @@ async function fetchYoutubeVideoFromAPI(videoId: string) {
 }
 
 async function fetchYoutubeVideosFromDB(videoId: string) {
-  unstable_noStore();
+  noStore();
   const { rows } = await sql<YoutubeVideo>`
     SELECT 
       video_id,
@@ -67,4 +67,13 @@ export async function fetchAllVideos(offset: number = 0, limit: number = 10) {
     LIMIT ${limit}
     OFFSET ${offset}`
   return rows
+}
+
+export async function searchYoutubeVideos(query: string) {
+  const apiKey = YOUTUBE_API_KEY;
+  const response = await fetch(
+    `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&part=id&type=video&q=${query}`
+  );
+  const data: { items: { id: { videoId: string } }[] } = await response.json();
+  return data.items.map(item => item.id.videoId);
 }

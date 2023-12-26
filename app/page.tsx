@@ -1,31 +1,39 @@
-import { YoutubeCard } from "@/app/ui/youtube-card";
+import { SearchResult } from "@/app/ui/youtube-search-result";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { updateUrl } from "@/app/lib/actions";
+import { searchVideos } from "@/app/lib/actions";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import { AiOutlineLoading } from "react-icons/ai";
+
+import { Suspense } from "react";
+
 
 export default function Home({
   searchParams,
 }: {
   searchParams?: {
-    videoId?: string;
+    q?: string;
   };
 }) {
-  const videoId = searchParams?.videoId;
+  const q = searchParams?.q;
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="flex w-full flex-row items-center space-between font-mono">
-        <form action={updateUrl} className="w-full flex items-center">
+    <main className="flex flex-col items-center justify-between mx-auto p-4">
+      <div className="flex w-full flex-row items-center font-mono">
+        <form action={searchVideos} className="w-full flex items-center">
           <Input
-            placeholder="Search for youtube videos to summarize"
-            name="videoIdInput"
+            placeholder="Search for youtube videos"
+            name="search"
           />
           <Button type="submit" className="m-2">
-            Search
+            <FaMagnifyingGlass />
           </Button>
         </form>
       </div>
-
-      {videoId && <YoutubeCard videoId={videoId} />}
+      <div className="mt-2">
+      <Suspense fallback={<AiOutlineLoading className="mx-auto mt-2 animate-spin" />}>
+        <SearchResult query={q}/>
+      </Suspense>
+      </div>
     </main>
   );
 }
