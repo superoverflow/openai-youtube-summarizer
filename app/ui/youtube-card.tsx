@@ -6,9 +6,17 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { RunAnalysisButton } from "@/app/ui/run-analysis-button";
-import { SentimentIcon } from "@/app/ui/sentiment-icon";
+import { SentimentIconContainer } from "@/app/ui/sentiment-icon";
 import { format } from 'date-fns';
-import { CiCalendar } from "react-icons/ci";
+import { CiCalendar, CiClock1 } from "react-icons/ci";
+
+const formatDuration = (duration: string) => {
+  const [hour, min] = duration.replace(/PT((\d+)H)?((\d+)M)?((\d+)S)?/, "$2,$4").split(",");
+  const hourStr = hour ? `${hour}h` : "";
+  const minStr = min ? `${min}m` : "";
+  return `${hourStr} ${minStr}`;
+}
+
 
 export async function YoutubeCard({ videoId }: { videoId: string }) {
   const video = await fetchAndCacheYoutubeVideo(videoId);
@@ -31,14 +39,20 @@ export async function YoutubeCard({ videoId }: { videoId: string }) {
           />
           <div className="flex flex-col w-full">
             <div className="mt-1 text-sm text-gray-500 flex items-center">
-              <CiCalendar className="mr-2" />
+              <CiCalendar className="mr-1" />
               <span className="grow">
                 {publishedAt}
               </span>
-              <SentimentIcon sentiment={video.market_sentiment} />
+              <CiClock1 className="mr-1 ml-2" />
+              <span>
+                {formatDuration(video.duration)}
+              </span>
             </div>
             <div className="mt-2 text-sm text-gray-500">
-              <RunAnalysisButton video={video} processed={!!video.market_sentiment} />
+              {!!video.market_sentiment ?
+                <SentimentIconContainer sentiment={video.market_sentiment} />
+                : <RunAnalysisButton video={video} processed={false} />
+              }
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@ const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 async function fetchYoutubeVideoFromAPI(videoId: string) {
   const apiKey = YOUTUBE_API_KEY;
   const response = await fetch(
-    `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&part=snippet&id=${videoId}`
+    `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&part=snippet&part=contentDetails&id=${videoId}`
   );
   const data = await response.json();
 
@@ -18,6 +18,7 @@ async function fetchYoutubeVideoFromAPI(videoId: string) {
     published_at: videoObject.publishedAt,
     thumbnail_url: videoObject.thumbnails.default.url,
     channel_id: videoObject.channelId,
+    duration: data.items[0].contentDetails.duration
   };
   return video;
 }
@@ -31,7 +32,8 @@ async function fetchYoutubeVideosFromDB(videoId: string) {
       published_at, 
       thumbnail_url, 
       channel_id, 
-      transcript, 
+      duration,
+      left(transcript, 255) as transcript,
       market_sentiment
     FROM youtube_videos
     WHERE video_id = ${videoId};`;
@@ -40,9 +42,13 @@ async function fetchYoutubeVideosFromDB(videoId: string) {
 }
 
 export async function saveYoutubeVideo(video: YoutubeVideo) {
+  noStore();
   sql`
-  INSERT INTO youtube_videos (video_id, title, published_at, thumbnail_url)
-  VALUES (${video.video_id}, ${video.title}, ${video.published_at}, ${video.thumbnail_url})
+  INSERT INTO youtube_videos 
+    (video_id, title, published_at, thumbnail_url,channel_id, duration)
+  VALUES (
+    ${video.video_id}, ${video.title}, ${video.published_at}, ${video.thumbnail_url}, 
+    ${video.channel_id}, ${video.duration})
   ON CONFLICT (video_id) DO NOTHING
 `;
 }
@@ -54,7 +60,7 @@ export async function fetchAndCacheYoutubeVideo(videoId: string) {
   }
 
   const video = await fetchYoutubeVideoFromAPI(videoId);
-  saveYoutubeVideo(video);
+  // saveYoutubeVideo(video);
   return video;
 }
 

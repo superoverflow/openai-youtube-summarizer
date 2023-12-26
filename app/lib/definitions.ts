@@ -30,6 +30,15 @@ export type YoutubeVideoAPIResponse = {
         description: string;
     };
     defaultAudioLanguage: string;
+    contentDetails: {
+        duration: string;
+        dimension: string;
+        definition: string;
+        caption: string;
+        licensedContent: boolean;
+        contentRating: {};
+        projection: string;
+    };
 }
 
 export type YoutubeVideo = {
@@ -38,6 +47,7 @@ export type YoutubeVideo = {
     published_at: string;
     thumbnail_url: string;
     channel_id: string;
+    duration: string;
     transcript?: string;
     market_sentiment?: Sentiment;
 }
