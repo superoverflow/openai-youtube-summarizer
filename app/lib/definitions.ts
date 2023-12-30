@@ -1,4 +1,4 @@
-type Sentiment = "Bullish" | "Neutral" | "Bearish" | null;
+export type Sentiment = "Bullish" | "Neutral" | "Bearish" | null;
 
 export type YoutubeVideoAPIResponse = {
     publishedAt: string;
