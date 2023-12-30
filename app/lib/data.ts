@@ -53,14 +53,13 @@ export async function saveYoutubeVideo(video: YoutubeVideo) {
 `;
 }
 
-export async function fetchAndCacheYoutubeVideo(videoId: string) {
+export async function fetchYoutubeVideo(videoId: string) {
   const videoFromDB = await fetchYoutubeVideosFromDB(videoId);
   if (videoFromDB != null) {
     return videoFromDB;
   }
 
   const video = await fetchYoutubeVideoFromAPI(videoId);
-  // saveYoutubeVideo(video);
   return video;
 }
 

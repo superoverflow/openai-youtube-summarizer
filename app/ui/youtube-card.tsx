@@ -1,4 +1,4 @@
-import { fetchAndCacheYoutubeVideo } from "@/app/lib/data";
+import { fetchYoutubeVideo } from "@/app/lib/data";
 import {
   Card,
   CardContent,
@@ -19,7 +19,7 @@ const formatDuration = (duration: string) => {
 
 
 export async function YoutubeCard({ videoId }: { videoId: string }) {
-  const video = await fetchAndCacheYoutubeVideo(videoId);
+  const video = await fetchYoutubeVideo(videoId);
   const thumbnails = video.thumbnail_url;
   const publishedAt = format(video.published_at, 'yyyy-MM-dd');
   return (
