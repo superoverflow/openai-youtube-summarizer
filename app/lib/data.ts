@@ -85,7 +85,7 @@ export async function fetchAllVideos(offset: number = 0, limit: number = 10) {
 export async function searchYoutubeVideos(query: string) {
   const apiKey = YOUTUBE_API_KEY;
   const response = await fetch(
-    `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&part=id&type=video&q=${query}`
+    `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&part=id&type=video&order=date&q=${query}`
   );
   const data: { items: { id: { videoId: string } }[] } = await response.json();
   return data.items.map(item => item.id.videoId);
@@ -135,4 +135,5 @@ export async function getSentiment(videoId: string) {
   const sentiment = await getSentimentFromApi(transcript, PROMPT, openAiClient);
   await saveSentiment(videoId, sentiment);
   revalidatePath('/videos');
+  return sentiment;
 }

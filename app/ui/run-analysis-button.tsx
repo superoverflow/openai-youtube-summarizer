@@ -17,9 +17,10 @@ export const RunAnalysisButton = ({ video, processed }: { video: YoutubeVideo, p
   const disabled = sent || processed;
   return (
     <Button className="w-full" variant="outline"
-      onClick={() => startTransition(() => {
+      onClick={() => startTransition(async () => {
         setSent(true)
-        processVideo(video)
+        const sentiment = await processVideo(video)
+        console.log(sentiment)
       }
       )}
       disabled={disabled}
